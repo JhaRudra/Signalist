@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signalist — AI-Powered Stock Market Predictor</title>
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════ -->
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+    </div>
+    Signalist
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#live">Live data</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn-ghost" onclick="openModal('login')">Log in</button>
+    <button class="btn-solid" onclick="openModal('signup')">Get started</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     TICKER BAR
+══════════════════════════════════════ -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="tick"><span class="tick-sym">AAPL</span><span class="tick-price">$189.45</span><span class="up">▲ 2.31%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">TSLA</span><span class="tick-price">$242.10</span><span class="dn">▼ 1.04%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">NVDA</span><span class="tick-price">$874.20</span><span class="up">▲ 3.78%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">MSFT</span><span class="tick-price">$415.30</span><span class="up">▲ 0.92%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">AMZN</span><span class="tick-price">$183.80</span><span class="dn">▼ 0.57%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">GOOGL</span><span class="tick-price">$174.60</span><span class="up">▲ 1.45%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">META</span><span class="tick-price">$512.90</span><span class="up">▲ 2.10%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">NFLX</span><span class="tick-price">$631.50</span><span class="dn">▼ 0.88%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">AMD</span><span class="tick-price">$168.40</span><span class="up">▲ 4.12%</span></span><span class="tick-dot"></span>
+    <!-- Duplicate set for seamless infinite loop -->
+    <span class="tick"><span class="tick-sym">AAPL</span><span class="tick-price">$189.45</span><span class="up">▲ 2.31%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">TSLA</span><span class="tick-price">$242.10</span><span class="dn">▼ 1.04%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">NVDA</span><span class="tick-price">$874.20</span><span class="up">▲ 3.78%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">MSFT</span><span class="tick-price">$415.30</span><span class="up">▲ 0.92%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">AMZN</span><span class="tick-price">$183.80</span><span class="dn">▼ 0.57%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">GOOGL</span><span class="tick-price">$174.60</span><span class="up">▲ 1.45%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">META</span><span class="tick-price">$512.90</span><span class="up">▲ 2.10%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">NFLX</span><span class="tick-price">$631.50</span><span class="dn">▼ 0.88%</span></span><span class="tick-dot"></span>
+    <span class="tick"><span class="tick-sym">AMD</span><span class="tick-price">$168.40</span><span class="up">▲ 4.12%</span></span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="hero">
+  <div class="badge"><i class="ti ti-sparkles"></i> AI-powered market intelligence</div>
+  <h1>Predict markets.<br><em>Act before the signal.</em></h1>
+  <p class="hero-sub">Signalist uses machine learning to deliver real-time stock predictions, deep market insights, and instant alerts — so you're always one step ahead of the market.</p>
+  <div class="hero-btns">
+    <button class="btn-hero solid" onclick="openModal('signup')"><i class="ti ti-chart-line"></i> Start predicting free</button>
+    <button class="btn-hero ghost" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})"><i class="ti ti-player-play"></i> See how it works</button>
+  </div>
+  <div class="hero-trust">
+    <span class="trust-item"><i class="ti ti-check"></i> No credit card needed</span>
+    <span class="trust-item"><i class="ti ti-check"></i> Free forever plan</span>
+    <span class="trust-item"><i class="ti ti-check"></i> 10,000+ active traders</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     DASHBOARD PREVIEW
+══════════════════════════════════════ -->
+<div class="preview-wrap">
+  <div class="preview-card">
+    <div class="preview-topbar">
+      <div class="preview-topbar-title"><div class="live-dot"></div> Live dashboard</div>
+      <div class="preview-tabs">
+        <button class="ptab active">1D</button>
+        <button class="ptab">1W</button>
+        <button class="ptab">1M</button>
+        <button class="ptab">1Y</button>
+      </div>
+    </div>
+    <div class="preview-body">
+      <div class="stats-row">
+        <div class="scard">
+          <div class="scard-label">Portfolio value</div>
+          <div class="scard-val">$48,320</div>
+          <div class="scard-sub up"><i class="ti ti-trending-up"></i> +3.2% today</div>
+        </div>
+        <div class="scard">
+          <div class="scard-label">Predicted 7-day gain</div>
+          <div class="scard-val up">+$1,540</div>
+          <div class="scard-sub" style="color:var(--text3)">85% confidence</div>
+        </div>
+        <div class="scard">
+          <div class="scard-label">Signal score</div>
+          <div class="scard-val">87<span style="font-size:14px;font-weight:400;color:var(--text3)">/100</span></div>
+          <div class="scard-sub up">Strong buy</div>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <div class="chart-label">NVDA · Nasdaq</div>
+        <div class="chart-val">$874.20</div>
+        <div class="chart-change up">▲ +3.78% today</div>
+        <div class="chart-svg-wrap">
+          <svg viewBox="0 0 700 90" preserveAspectRatio="none" width="100%" height="90">
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stop-color="#1D9E75" stop-opacity=".18"/>
+                <stop offset="100%" stop-color="#1D9E75" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,80 C60,76 100,72 150,64 C200,56 230,60 280,50 C330,40 370,44 420,32 C470,20 530,24 590,12 L700,6 L700,90 L0,90 Z" fill="url(#g1)"/>
+            <path d="M0,80 C60,76 100,72 150,64 C200,56 230,60 280,50 C330,40 370,44 420,32 C470,20 530,24 590,12 L700,6" fill="none" stroke="#1D9E75" stroke-width="2"/>
+            <circle cx="700" cy="6" r="4" fill="#1D9E75"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="alerts-title"><i class="ti ti-bell-ringing"></i> Live signals</div>
+      <div class="alert-row">
+        <div class="alert-icon-wrap ai-buy"><i class="ti ti-trending-up"></i></div>
+        <div class="alert-content">
+          <div class="alert-title-row">NVDA — Breakout signal</div>
+          <div class="alert-desc">AI model predicts breakout above $880 resistance zone</div>
+        </div>
+        <span class="alert-badge ab-buy">Buy</span>
+      </div>
+      <div class="alert-row">
+        <div class="alert-icon-wrap ai-sell"><i class="ti ti-trending-down"></i></div>
+        <div class="alert-content">
+          <div class="alert-title-row">TSLA — Bearish divergence</div>
+          <div class="alert-desc">RSI divergence on 4H chart, weakening momentum detected</div>
+        </div>
+        <span class="alert-badge ab-sell">Sell</span>
+      </div>
+      <div class="alert-row">
+        <div class="alert-icon-wrap ai-watch"><i class="ti ti-eye"></i></div>
+        <div class="alert-content">
+          <div class="alert-title-row">AMZN — Earnings alert</div>
+          <div class="alert-desc">High volatility expected, earnings report in 3 days</div>
+        </div>
+        <span class="alert-badge ab-watch">Watch</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LIVE STOCK DATA
+══════════════════════════════════════ -->
+<section class="live-section" id="live">
+  <div class="section-eyebrow">Live market data</div>
+  <h2 class="section-title">Real stocks. Real signals.</h2>
+  <p class="section-sub">Prices and AI signal scores refresh every 60 seconds during market hours.</p>
+  <div id="stocksGrid" class="stocks-grid">
+    <div class="loading-msg">
+      <i class="ti ti-loader" style="animation:spin 1s linear infinite;display:inline-block;margin-right:6px"></i>
+      Loading live data...
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     FEATURES
+══════════════════════════════════════ -->
+<section class="features-section" id="features">
+  <div class="section-eyebrow">Core features</div>
+  <h2 class="section-title">Everything you need to trade smarter</h2>
+  <p class="section-sub">Institutional-grade tools built for everyday traders.</p>
+  <div class="features-grid">
+    <div class="feat">
+      <div class="feat-ico"><i class="ti ti-brain"></i></div>
+      <h4>AI price predictions</h4>
+      <p>ML models trained on decades of market data forecast price movements with confidence scores.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-ico"><i class="ti ti-bell-ringing"></i></div>
+      <h4>Smart alerts</h4>
+      <p>Instant push, email, or SMS alerts for breakouts, reversals, and anomalies before the crowd reacts.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-ico"><i class="ti ti-chart-candle"></i></div>
+      <h4>Market insights</h4>
+      <p>Deep technical and fundamental analysis surfaced automatically across thousands of stocks and ETFs.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-ico"><i class="ti ti-shield-check"></i></div>
+      <h4>Risk scoring</h4>
+      <p>Every signal includes a risk/reward score so you can size positions with confidence and protect capital.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-ico"><i class="ti ti-news"></i></div>
+      <h4>Sentiment analysis</h4>
+      <p>Real-time news and social sentiment feeds filtered and ranked by market relevance and signal strength.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-ico"><i class="ti ti-device-mobile"></i></div>
+      <h4>Mobile ready</h4>
+      <p>Track your watchlist and receive alerts anywhere with a fully responsive mobile experience.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     HOW IT WORKS
+══════════════════════════════════════ -->
+<section class="how-section" id="how">
+  <div class="section-eyebrow">How it works</div>
+  <h2 class="section-title">From data to decision in seconds</h2>
+  <p class="section-sub">Signalist processes millions of data points so you don't have to.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h4>Add your watchlist</h4><p>Track any stock, ETF, or index you want to follow.</p></div>
+    <div class="step"><div class="step-num">2</div><h4>AI scans 24/7</h4><p>Models analyze price, volume, news, and sentiment continuously.</p></div>
+    <div class="step"><div class="step-num">3</div><h4>Signals generated</h4><p>Buy, sell, and watch signals appear with confidence scores and reasoning.</p></div>
+    <div class="step"><div class="step-num">4</div><h4>You get alerted</h4><p>Instant alerts the moment an opportunity or risk is detected.</p></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     TESTIMONIALS
+══════════════════════════════════════ -->
+<section class="testimonials" id="testimonials">
+  <div class="section-eyebrow">Testimonials</div>
+  <h2 class="section-title">Trusted by traders worldwide</h2>
+  <p class="section-sub">See what our community has to say.</p>
+  <div class="testi-grid">
+    <div class="tcard">
+      <div class="tcard-stars">★★★★★</div>
+      <p class="tcard-quote">"Signalist flagged the NVDA breakout 2 hours before it happened. I've never had a tool this accurate before."</p>
+      <div class="tcard-author">
+        <div class="tcard-avatar" style="background:#E1F5EE;color:#0F6E56">RS</div>
+        <div><div class="tcard-name">Rohit S.</div><div class="tcard-role">Swing trader, Mumbai</div></div>
+      </div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-stars">★★★★★</div>
+      <p class="tcard-quote">"The risk scoring feature alone saved me from a bad TSLA position. This is the future of retail trading."</p>
+      <div class="tcard-author">
+        <div class="tcard-avatar" style="background:#E6F1FB;color:#185FA5">AM</div>
+        <div><div class="tcard-name">Anika M.</div><div class="tcard-role">Day trader, Bangalore</div></div>
+      </div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-stars">★★★★☆</div>
+      <p class="tcard-quote">"I was skeptical about AI predictions, but the signal accuracy over 3 months has been genuinely impressive."</p>
+      <div class="tcard-author">
+        <div class="tcard-avatar" style="background:#FAEEDA;color:#854F0B">PK</div>
+        <div><div class="tcard-name">Priya K.</div><div class="tcard-role">Portfolio manager, Delhi</div></div>
+      </div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-stars">★★★★★</div>
+      <p class="tcard-quote">"The alerts are lightning fast and the sentiment analysis gives me an edge I never had with traditional tools."</p>
+      <div class="tcard-author">
+        <div class="tcard-avatar" style="background:#FAECE7;color:#993C1D">DG</div>
+        <div><div class="tcard-name">Dev G.</div><div class="tcard-role">Quant analyst, Kolkata</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     PRICING
+══════════════════════════════════════ -->
+<section class="pricing-section" id="pricing">
+  <div class="section-eyebrow">Pricing</div>
+  <h2 class="section-title">Simple, transparent plans</h2>
+  <p class="section-sub">Start free. Upgrade when you need more signals.</p>
+  <div class="pricing-grid">
+    <div class="pcard">
+      <div class="plan-name">Free</div>
+      <div class="plan-price">$0</div>
+      <div class="plan-period">forever</div>
+      <ul class="plan-feats">
+        <li class="yes"><i class="ti ti-check"></i> 5 stocks tracked</li>
+        <li class="yes"><i class="ti ti-check"></i> Daily signals</li>
+        <li class="yes"><i class="ti ti-check"></i> Email alerts</li>
+        <li class="no"><i class="ti ti-x"></i> AI predictions</li>
+        <li class="no"><i class="ti ti-x"></i> Real-time signals</li>
+      </ul>
+      <button class="plan-btn" onclick="openModal('signup')">Get started</button>
+    </div>
+    <div class="pcard featured">
+      <div class="popular-badge">Most popular</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">$19<span>/mo</span></div>
+      <div class="plan-period">billed monthly</div>
+      <ul class="plan-feats">
+        <li class="yes"><i class="ti ti-check"></i> Unlimited stocks</li>
+        <li class="yes"><i class="ti ti-check"></i> Real-time signals</li>
+        <li class="yes"><i class="ti ti-check"></i> Push + SMS alerts</li>
+        <li class="yes"><i class="ti ti-check"></i> Full AI predictions</li>
+        <li class="yes"><i class="ti ti-check"></i> Sentiment analysis</li>
+      </ul>
+      <button class="plan-btn" onclick="openModal('signup')">Start free trial</button>
+    </div>
+    <div class="pcard">
+      <div class="plan-name">Enterprise</div>
+      <div class="plan-price">Custom</div>
+      <div class="plan-period">contact us</div>
+      <ul class="plan-feats">
+        <li class="yes"><i class="ti ti-check"></i> Team dashboards</li>
+        <li class="yes"><i class="ti ti-check"></i> REST API access</li>
+        <li class="yes"><i class="ti ti-check"></i> Custom ML models</li>
+        <li class="yes"><i class="ti ti-check"></i> Dedicated support</li>
+        <li class="yes"><i class="ti ti-check"></i> SLA guarantee</li>
+      </ul>
+      <button class="plan-btn" onclick="openModal('login')">Contact sales</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     CALL TO ACTION
+══════════════════════════════════════ -->
+<section class="cta-section">
+  <h2>Ready to read the market?</h2>
+  <p>Join 10,000+ traders already using Signalist to stay ahead.</p>
+  <button class="btn-hero solid" onclick="openModal('signup')"><i class="ti ti-rocket"></i> Get started free today</button>
+</section>
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:white;fill:none;stroke-width:2.5">
+            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+            <polyline points="16 7 22 7 22 13"/>
+          </svg>
+        </div>
+        Signalist
+      </div>
+      <p>AI-powered stock market predictions, insights, and alerts for modern traders.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Product</h5>
+      <a href="#">Features</a><a href="#">Pricing</a><a href="#">Changelog</a><a href="#">Roadmap</a>
+    </div>
+    <div class="footer-col">
+      <h5>Learn</h5>
+      <a href="#">Blog</a><a href="#">Docs</a><a href="#">API</a><a href="#">Guides</a>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <a href="#">About</a><a href="#">Contact</a><a href="#">Privacy</a><a href="#">Terms</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Signalist. All rights reserved.</p>
+    <p>Market predictions are informational only and do not constitute financial advice.</p>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════
+     AUTH MODAL
+══════════════════════════════════════ -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    <div class="modal-logo">
+      <div class="logo-icon" style="width:24px;height:24px">
+        <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:white;fill:none;stroke-width:2.5">
+          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+          <polyline points="16 7 22 7 22 13"/>
+        </svg>
+      </div>
+      Signalist
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab" id="tabLogin"  onclick="switchTab('login')">Log in</button>
+      <button class="modal-tab" id="tabSignup" onclick="switchTab('signup')">Create account</button>
+    </div>
+
+    <!-- Login form -->
+    <div id="formLogin">
+      <div class="form-group"><label>Email</label><input type="email" placeholder="you@example.com"></div>
+      <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+      <button class="form-submit" onclick="handleAuth('login')">Log in</button>
+      <div class="form-divider">or</div>
+      <button class="social-btn"><i class="ti ti-brand-google"></i> Continue with Google</button>
+      <p class="form-footer">No account? <a href="#" onclick="switchTab('signup')">Sign up free</a></p>
+    </div>
+
+    <!-- Sign-up form -->
+    <div id="formSignup" style="display:none">
+      <div class="form-group"><label>Full name</label><input type="text" placeholder="Your name"></div>
+      <div class="form-group"><label>Email</label><input type="email" placeholder="you@example.com"></div>
+      <div class="form-group"><label>Password</label><input type="password" placeholder="Min. 8 characters"></div>
+      <button class="form-submit" onclick="handleAuth('signup')">Create free account</button>
+      <div class="form-divider">or</div>
+      <button class="social-btn"><i class="ti ti-brand-google"></i> Continue with Google</button>
+      <p class="form-footer">By signing up you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</p>
+    </div>
+
+    <!-- Success state -->
+    <div class="modal-success" id="authSuccess">
+      <i class="ti ti-circle-check"></i>
+      <h3 id="successTitle">Welcome to Signalist!</h3>
+      <p id="successMsg">Your account is ready. Start tracking stocks now.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Script -->
+<script src="script.js"></script>
+</body>
+</html>

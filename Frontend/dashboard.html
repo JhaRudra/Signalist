@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signalist Dashboard</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f4f7f6; color: #1a1a18; }
+    nav { height: 60px; background: #fff; border-bottom: 1px solid #ddd; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; }
+    .logo { font-size: 22px; font-weight: bold; color: #1D9E75; }
+    .logout { background: #D85A30; color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; }
+    .container { padding: 30px; }
+    .hero, .card { background: white; padding: 25px; border-radius: 14px; box-shadow: 0 3px 10px rgba(0,0,0,.08); margin-bottom: 25px; }
+    .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
+    input { padding: 12px; width: 70%; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; }
+    button { padding: 10px 14px; border: none; border-radius: 8px; background: #1D9E75; color: white; cursor: pointer; font-size: 14px; margin-top: 8px; }
+    .remove-btn { background: #D85A30; padding: 6px 10px; font-size: 12px; margin-top: 0; }
+    .prediction { margin-top: 20px; padding: 20px; border-radius: 12px; background: #E1F5EE; }
+    .signal { font-size: 32px; font-weight: bold; color: #1D9E75; }
+    .watchlist-item { padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .watchlist-left { display: flex; flex-direction: column; gap: 4px; }
+    .badge { background: #E1F5EE; color: #0F6E56; padding: 5px 10px; border-radius: 20px; font-size: 13px; display: inline-block; }
+    #stockChart { min-height: 320px; }
+    .news-box { margin-top: 15px; padding: 15px; background: #f7faf9; border-radius: 10px; }
+    .news-box ul { padding-left: 20px; margin-bottom: 0; }
+    .news-box li { margin-bottom: 8px; }
+
+    @media(max-width: 768px) {
+      .grid { grid-template-columns: 1fr; }
+      input { width: 100%; margin-bottom: 10px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<nav>
+  <div class="logo">Signalist</div>
+  <button class="logout" onclick="logout()">Logout</button>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <h1>Welcome to Signalist Dashboard 🚀</h1>
+    <p>You are logged in successfully. Search a stock and get AI-based prediction signals.</p>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div class="card">
+        <h2>AI Stock Prediction</h2>
+        <p>Enter a stock symbol like AAPL, TSLA, NVDA, MSFT, JPM.</p>
+
+        <input type="text" id="stockInput" placeholder="Enter stock symbol">
+        <button onclick="predictStock()">Predict</button>
+
+        <div class="prediction" id="predictionBox" style="display:none;">
+          <p>Stock: <b id="stockName"></b></p>
+          <p>Current Price: <b id="stockPrice"></b></p>
+          <p>AI Signal:</p>
+          <div class="signal" id="signalText"></div>
+          <p>Confidence: <b id="confidenceText"></b></p>
+          <p id="reasonText"></p>
+
+          <button onclick="addToWatchlist()">Add to Watchlist</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>News Sentiment</h2>
+        <p>Sentiment: <span class="badge" id="sentimentText">Search a stock first</span></p>
+        <div class="news-box">
+          <h4>Latest News</h4>
+          <ul id="newsList">
+            <li>No news loaded yet.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Real Candlestick Chart</h2>
+        <div id="stockChart"></div>
+      </div>
+
+      <div class="card">
+        <h2>Prediction History</h2>
+        <div id="historyList">No saved prediction history yet.</div>
+      </div>
+
+      <div class="card">
+        <h2>Portfolio Simulator</h2>
+        <p>Virtual Balance: <span class="badge">$100,000</span></p>
+
+        <input type="number" id="quantityInput" placeholder="Quantity" min="1">
+        <button onclick="buyStock()">Buy Stock</button>
+
+        <div id="portfolioBox">Loading portfolio...</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>Your Watchlist</h2>
+        <div id="watchlistBox">Loading watchlist...</div>
+      </div>
+
+      <div class="card">
+        <h2>Account Status</h2>
+        <p><span class="badge">Logged In</span></p>
+        <p>Your JWT token is stored in browser localStorage.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const token = localStorage.getItem("signalistToken");
+
+  if (!token) {
+    window.location.href = "index.html";
+  }
+
+  function logout() {
+    localStorage.removeItem("signalistToken");
+    window.location.href = "index.html";
+  }
+
+  async function predictStock() {
+    const stock = document.getElementById("stockInput").value.toUpperCase();
+
+    if (!stock) {
+      alert("Please enter a stock symbol");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://127.0.0.1:5000/api/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stock })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Prediction failed");
+        return;
+      }
+
+      document.getElementById("predictionBox").style.display = "block";
+      document.getElementById("stockName").textContent = data.stock;
+      document.getElementById("stockPrice").textContent = "$" + Number(data.price).toFixed(2);
+      document.getElementById("signalText").textContent = data.signal;
+      document.getElementById("confidenceText").textContent = data.confidence + "%";
+      document.getElementById("reasonText").textContent = data.reason;
+
+      document.getElementById("sentimentText").textContent = data.sentiment || "Neutral";
+
+      const newsList = document.getElementById("newsList");
+
+      if (data.news && data.news.length > 0) {
+        newsList.innerHTML = data.news.map(title => `<li>${title}</li>`).join("");
+      } else {
+        newsList.innerHTML = "<li>No latest news found.</li>";
+      }
+
+      drawCandlestickChart(data.stock, data.candles);
+      loadHistory();
+
+    } catch (error) {
+      console.error(error);
+      alert("Prediction server not available");
+    }
+  }
+
+  let stockChart;
+
+  function drawCandlestickChart(stock, candles) {
+    if (!candles || candles.length === 0) {
+      document.getElementById("stockChart").innerHTML = "No chart data available.";
+      return;
+    }
+
+    const options = {
+      chart: {
+        type: "candlestick",
+        height: 320
+      },
+      series: [{
+        name: stock,
+        data: candles
+      }],
+      title: {
+        text: stock + " Real Candlestick Chart",
+        align: "left"
+      },
+      xaxis: {
+        type: "datetime"
+      },
+      yaxis: {
+        tooltip: {
+          enabled: true
+        }
+      }
+    };
+
+    if (stockChart) {
+      stockChart.destroy();
+    }
+
+    document.querySelector("#stockChart").innerHTML = "";
+    stockChart = new ApexCharts(document.querySelector("#stockChart"), options);
+    stockChart.render();
+  }
+
+  async function loadHistory() {
+    try {
+      const res = await fetch("http://127.0.0.1:5000/api/predictions");
+      const data = await res.json();
+
+      const historyList = document.getElementById("historyList");
+
+      if (!Array.isArray(data) || data.length === 0) {
+        historyList.innerHTML = "No saved prediction history yet.";
+        return;
+      }
+
+      historyList.innerHTML = data.map(item => `
+        <div class="watchlist-item">
+          <div class="watchlist-left">
+            <strong>${item.stock}</strong>
+            <small>${item.signal} - ${item.reason || ""}</small>
+          </div>
+          <span class="badge">${item.confidence}%</span>
+        </div>
+      `).join("");
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function addToWatchlist() {
+    const stock = document.getElementById("stockName").textContent;
+    const signal = document.getElementById("signalText").textContent;
+
+    if (!stock) {
+      alert("Predict a stock first");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://127.0.0.1:5000/api/watchlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stock, signal })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Could not add to watchlist");
+        return;
+      }
+
+      alert("Added to watchlist");
+      loadWatchlist();
+
+    } catch (error) {
+      console.error(error);
+      alert("Watchlist server not available");
+    }
+  }
+
+  async function loadWatchlist() {
+    try {
+      const res = await fetch("http://127.0.0.1:5000/api/watchlist");
+      const data = await res.json();
+
+      const box = document.getElementById("watchlistBox");
+
+      if (!Array.isArray(data) || data.length === 0) {
+        box.innerHTML = "No stocks in watchlist.";
+        return;
+      }
+
+      box.innerHTML = data.map(item => `
+        <div class="watchlist-item">
+          <div class="watchlist-left">
+            <strong>${item.stock}</strong>
+            <span class="badge">${item.signal}</span>
+          </div>
+          <button class="remove-btn" onclick="removeWatchlist('${item._id}')">Remove</button>
+        </div>
+      `).join("");
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function removeWatchlist(id) {
+    try {
+      await fetch(`http://127.0.0.1:5000/api/watchlist/${id}`, {
+        method: "DELETE"
+      });
+
+      loadWatchlist();
+
+    } catch (error) {
+      console.error(error);
+      alert("Could not remove item");
+    }
+  }
+
+  async function buyStock() {
+    const stock = document.getElementById("stockName").textContent;
+    const quantity = document.getElementById("quantityInput").value;
+    const price = document.getElementById("stockPrice").textContent.replace("$", "");
+
+    if (!stock) {
+      alert("Predict a stock first");
+      return;
+    }
+
+    if (!quantity || quantity <= 0) {
+      alert("Enter quantity");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://127.0.0.1:5000/api/portfolio/buy", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          stock,
+          quantity,
+          price
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Could not buy stock");
+        return;
+      }
+
+      alert("Stock purchased");
+      document.getElementById("quantityInput").value = "";
+      loadPortfolio();
+
+    } catch (error) {
+      console.error(error);
+      alert("Portfolio server unavailable");
+    }
+  }
+
+  async function loadPortfolio() {
+    try {
+      const res = await fetch("http://127.0.0.1:5000/api/portfolio");
+      const data = await res.json();
+
+      const box = document.getElementById("portfolioBox");
+
+      if (!Array.isArray(data) || data.length === 0) {
+        box.innerHTML = "No stocks purchased yet.";
+        return;
+      }
+
+      box.innerHTML = data.map(item => `
+        <div class="watchlist-item">
+          <div class="watchlist-left">
+            <strong>${item.stock}</strong>
+            <small>
+  Qty: ${item.quantity}<br>
+  Buy: $${Number(item.buyPrice).toFixed(2)}<br>
+  Current: $${Number(item.currentPrice).toFixed(2)}<br>
+  Invested: $${Number(item.investedValue).toFixed(2)}<br>
+  Value: $${Number(item.currentValue).toFixed(2)}<br>
+  P/L: $${Number(item.profitLoss).toFixed(2)}
+</small>
+          </div>
+          <button class="remove-btn" onclick="removePortfolio('${item._id}')">Remove</button>
+        </div>
+      `).join("");
+
+    } catch (error) {
+      console.error(error);
+      document.getElementById("portfolioBox").innerHTML = "Could not load portfolio.";
+    }
+  }
+
+  async function removePortfolio(id) {
+    try {
+      await fetch(`http://127.0.0.1:5000/api/portfolio/${id}`, {
+        method: "DELETE"
+      });
+
+      loadPortfolio();
+
+    } catch (error) {
+      console.error(error);
+      alert("Could not remove portfolio item");
+    }
+  }
+
+  loadHistory();
+  loadWatchlist();
+  loadPortfolio();
+</script>
+
+</body>
+</html>
