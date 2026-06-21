@@ -1,4 +1,4 @@
-const API_URL = "http://signalist-backend-xix0.onrender.com/api/auth";
+const API_URL = "https://signalist-backend-xix0.onrender.com/api/auth";
 
 /* AUTH MODAL */
 function openModal(tab) {

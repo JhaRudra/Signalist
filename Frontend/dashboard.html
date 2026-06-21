@@ -253,7 +253,7 @@
     }
 
     try {
-      const res = await fetch("http://signalist-backend-xix0.onrender.com/api/watchlist", {
+      const res = await fetch("https://signalist-backend-xix0.onrender.com/api/watchlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ stock, signal })
@@ -277,7 +277,7 @@
 
   async function loadWatchlist() {
     try {
-      const res = await fetch("http://signalist-backend-xix0.onrender.com/api/watchlist");
+      const res = await fetch("https://signalist-backend-xix0.onrender.com/api/watchlist");
       const data = await res.json();
 
       const box = document.getElementById("watchlistBox");
@@ -304,7 +304,7 @@
 
   async function removeWatchlist(id) {
     try {
-      await fetch(`http://signalist-backend-xix0.onrender.com/api/watchlist/${id}`, {
+      await fetch(`https://signalist-backend-xix0.onrender.com/api/watchlist/${id}`, {
         method: "DELETE"
       });
 
@@ -332,7 +332,7 @@
     }
 
     try {
-      const res = await fetch("http://signalist-backend-xix0.onrender.com/api/portfolio/buy", {
+      const res = await fetch("https://signalist-backend-xix0.onrender.com/api/portfolio/buy", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -363,7 +363,7 @@
 
   async function loadPortfolio() {
     try {
-      const res = await fetch("http://signalist-backend-xix0.onrender.com/api/portfolio");
+      const res = await fetch("https://signalist-backend-xix0.onrender.com/api/portfolio");
       const data = await res.json();
 
       const box = document.getElementById("portfolioBox");
@@ -398,7 +398,7 @@
 
   async function removePortfolio(id) {
     try {
-      await fetch(`http://signalist-backend-xix0.onrender.com/api/portfolio/${id}`, {
+      await fetch(`https://signalist-backend-xix0.onrender.com/api/portfolio/${id}`, {
         method: "DELETE"
       });
 
