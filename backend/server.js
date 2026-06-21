@@ -92,9 +92,12 @@ app.post("/api/predict", async (req, res) => {
     try {
         const { stock } = req.body;
 
-        const aiResponse = await axios.post("http://127.0.0.1:7000/predict", {
-            stock
-        });
+        const aiResponse = await axios.post(
+    "https://signalist-1.onrender.com/predict",
+    {
+        stock
+    }
+);
 
         const prediction = aiResponse.data;
 
@@ -221,10 +224,12 @@ app.get("/api/portfolio", async (req, res) => {
             let currentPrice = buyPrice;
 
             try {
-                const aiResponse = await axios.post("http://127.0.0.1:7000/predict", {
-                    stock: item.stock
-                });
-
+                const aiResponse = await axios.post(
+    "https://signalist-1.onrender.com/predict",
+    {
+        stock: item.stock
+    }
+);
                 currentPrice = Number(aiResponse.data.price);
             } catch (err) {
                 console.log("Could not fetch live price for", item.stock);
