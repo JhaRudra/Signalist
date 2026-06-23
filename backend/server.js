@@ -26,6 +26,25 @@ app.get("/", (req, res) => {
     res.send("Signalist Backend Running");
 });
 
+// AUTH MIDDLEWARE
+function verifyToken(req, res, next) {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+        return res.status(401).json({ message: "No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        return res.status(401).json({ message: "Invalid token" });
+    }
+}
+
 // REGISTER
 app.post("/api/auth/register", async (req, res) => {
     try {
@@ -135,12 +154,13 @@ app.get("/api/predictions", async (req, res) => {
     }
 });
 
-// WATCHLIST
-app.post("/api/watchlist", async (req, res) => {
+// WATCHLIST - USER SPECIFIC
+app.post("/api/watchlist", verifyToken, async (req, res) => {
     try {
         const { stock, signal } = req.body;
 
         const item = new Watchlist({
+            userId: req.user.id,
             stock,
             signal
         });
@@ -157,10 +177,10 @@ app.post("/api/watchlist", async (req, res) => {
     }
 });
 
-app.get("/api/watchlist", async (req, res) => {
+app.get("/api/watchlist", verifyToken, async (req, res) => {
     try {
         const items = await Watchlist
-            .find()
+            .find({ userId: req.user.id })
             .sort({ createdAt: -1 });
 
         res.json(items);
@@ -170,9 +190,12 @@ app.get("/api/watchlist", async (req, res) => {
     }
 });
 
-app.delete("/api/watchlist/:id", async (req, res) => {
+app.delete("/api/watchlist/:id", verifyToken, async (req, res) => {
     try {
-        await Watchlist.findByIdAndDelete(req.params.id);
+        await Watchlist.findOneAndDelete({
+            _id: req.params.id,
+            userId: req.user.id
+        });
 
         res.json({ message: "Removed from watchlist" });
 
@@ -181,8 +204,8 @@ app.delete("/api/watchlist/:id", async (req, res) => {
     }
 });
 
-// PORTFOLIO - BUY STOCK
-app.post("/api/portfolio/buy", async (req, res) => {
+// PORTFOLIO - BUY STOCK - USER SPECIFIC
+app.post("/api/portfolio/buy", verifyToken, async (req, res) => {
     try {
         const { stock, quantity, price } = req.body;
 
@@ -193,6 +216,7 @@ app.post("/api/portfolio/buy", async (req, res) => {
         }
 
         const item = new Portfolio({
+            userId: req.user.id,
             stock: stock.toUpperCase(),
             quantity: Number(quantity),
             buyPrice: Number(price)
@@ -210,10 +234,12 @@ app.post("/api/portfolio/buy", async (req, res) => {
     }
 });
 
-// PORTFOLIO - LIVE PROFIT/LOSS
-app.get("/api/portfolio", async (req, res) => {
+// PORTFOLIO - LIVE PROFIT/LOSS - USER SPECIFIC
+app.get("/api/portfolio", verifyToken, async (req, res) => {
     try {
-        const holdings = await Portfolio.find().sort({ createdAt: -1 });
+        const holdings = await Portfolio
+            .find({ userId: req.user.id })
+            .sort({ createdAt: -1 });
 
         const updatedHoldings = [];
 
@@ -256,10 +282,13 @@ app.get("/api/portfolio", async (req, res) => {
     }
 });
 
-// PORTFOLIO - DELETE HOLDING
-app.delete("/api/portfolio/:id", async (req, res) => {
+// PORTFOLIO - DELETE HOLDING - USER SPECIFIC
+app.delete("/api/portfolio/:id", verifyToken, async (req, res) => {
     try {
-        await Portfolio.findByIdAndDelete(req.params.id);
+        await Portfolio.findOneAndDelete({
+            _id: req.params.id,
+            userId: req.user.id
+        });
 
         res.json({ message: "Portfolio item removed" });
 

@@ -115,12 +115,16 @@
 
 <script>
   const BACKEND_URL = "https://signalist-backend-xix0.onrender.com";
-
   const token = localStorage.getItem("signalistToken");
 
   if (!token) {
     window.location.href = "index.html";
   }
+
+  const authHeaders = {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`
+  };
 
   const userName = localStorage.getItem("signalistUser");
 
@@ -166,6 +170,7 @@
       document.getElementById("sentimentText").textContent = data.sentiment || "Neutral";
 
       const newsList = document.getElementById("newsList");
+
       if (data.news && data.news.length > 0) {
         newsList.innerHTML = data.news.map(title => `<li>${title}</li>`).join("");
       } else {
@@ -247,7 +252,7 @@
     try {
       const res = await fetch(`${BACKEND_URL}/api/watchlist`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders,
         body: JSON.stringify({ stock, signal })
       });
 
@@ -269,7 +274,12 @@
 
   async function loadWatchlist() {
     try {
-      const res = await fetch(`${BACKEND_URL}/api/watchlist`);
+      const res = await fetch(`${BACKEND_URL}/api/watchlist`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
       const data = await res.json();
 
       const box = document.getElementById("watchlistBox");
@@ -297,8 +307,15 @@
 
   async function removeWatchlist(id) {
     try {
-      await fetch(`${BACKEND_URL}/api/watchlist/${id}`, { method: "DELETE" });
+      await fetch(`${BACKEND_URL}/api/watchlist/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
       loadWatchlist();
+
     } catch (error) {
       console.error(error);
       alert("Could not remove item");
@@ -323,7 +340,7 @@
     try {
       const res = await fetch(`${BACKEND_URL}/api/portfolio/buy`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders,
         body: JSON.stringify({ stock, quantity, price })
       });
 
@@ -346,7 +363,12 @@
 
   async function loadPortfolio() {
     try {
-      const res = await fetch(`${BACKEND_URL}/api/portfolio`);
+      const res = await fetch(`${BACKEND_URL}/api/portfolio`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
       const data = await res.json();
 
       const box = document.getElementById("portfolioBox");
@@ -381,8 +403,15 @@
 
   async function removePortfolio(id) {
     try {
-      await fetch(`${BACKEND_URL}/api/portfolio/${id}`, { method: "DELETE" });
+      await fetch(`${BACKEND_URL}/api/portfolio/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
       loadPortfolio();
+
     } catch (error) {
       console.error(error);
       alert("Could not remove portfolio item");
