@@ -27,7 +27,6 @@
     .news-box { margin-top: 15px; padding: 15px; background: #f7faf9; border-radius: 10px; }
     .news-box ul { padding-left: 20px; margin-bottom: 0; }
     .news-box li { margin-bottom: 8px; }
-
     @media(max-width: 768px) {
       .grid { grid-template-columns: 1fr; }
       input { width: 100%; margin-bottom: 10px; }
@@ -52,7 +51,7 @@
     <div>
       <div class="card">
         <h2>AI Stock Prediction</h2>
-        <p>Enter a stock symbol like AAPL, TSLA, NVDA, MSFT, JPM.</p>
+        <p>Enter a stock symbol like AAPL, TSLA, NVDA, MSFT, JPM, Reliance, TCS.</p>
 
         <input type="text" id="stockInput" placeholder="Enter stock symbol">
         <button onclick="predictStock()">Predict</button>
@@ -64,7 +63,6 @@
           <div class="signal" id="signalText"></div>
           <p>Confidence: <b id="confidenceText"></b></p>
           <p id="reasonText"></p>
-
           <button onclick="addToWatchlist()">Add to Watchlist</button>
         </div>
       </div>
@@ -93,10 +91,8 @@
       <div class="card">
         <h2>Portfolio Simulator</h2>
         <p>Virtual Balance: <span class="badge">$100,000</span></p>
-
         <input type="number" id="quantityInput" placeholder="Quantity" min="1">
         <button onclick="buyStock()">Buy Stock</button>
-
         <div id="portfolioBox">Loading portfolio...</div>
       </div>
     </div>
@@ -117,6 +113,8 @@
 </div>
 
 <script>
+  const BACKEND_URL = "https://signalist-backend-xix0.onrender.com";
+
   const token = localStorage.getItem("signalistToken");
 
   if (!token) {
@@ -129,7 +127,7 @@
   }
 
   async function predictStock() {
-    const stock = document.getElementById("stockInput").value.toUpperCase();
+    const stock = document.getElementById("stockInput").value.trim();
 
     if (!stock) {
       alert("Please enter a stock symbol");
@@ -137,7 +135,7 @@
     }
 
     try {
-      const res = await fetch("https://signalist-1.onrender.com/predict", {
+      const res = await fetch(`${BACKEND_URL}/api/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ stock })
@@ -160,7 +158,6 @@
       document.getElementById("sentimentText").textContent = data.sentiment || "Neutral";
 
       const newsList = document.getElementById("newsList");
-
       if (data.news && data.news.length > 0) {
         newsList.innerHTML = data.news.map(title => `<li>${title}</li>`).join("");
       } else {
@@ -185,31 +182,14 @@
     }
 
     const options = {
-      chart: {
-        type: "candlestick",
-        height: 320
-      },
-      series: [{
-        name: stock,
-        data: candles
-      }],
-      title: {
-        text: stock + " Real Candlestick Chart",
-        align: "left"
-      },
-      xaxis: {
-        type: "datetime"
-      },
-      yaxis: {
-        tooltip: {
-          enabled: true
-        }
-      }
+      chart: { type: "candlestick", height: 320 },
+      series: [{ name: stock, data: candles }],
+      title: { text: stock + " Real Candlestick Chart", align: "left" },
+      xaxis: { type: "datetime" },
+      yaxis: { tooltip: { enabled: true } }
     };
 
-    if (stockChart) {
-      stockChart.destroy();
-    }
+    if (stockChart) stockChart.destroy();
 
     document.querySelector("#stockChart").innerHTML = "";
     stockChart = new ApexCharts(document.querySelector("#stockChart"), options);
@@ -218,7 +198,7 @@
 
   async function loadHistory() {
     try {
-      const res = await fetch("https://signalist-backend-xix0.onrender.com/api/predictions");
+      const res = await fetch(`${BACKEND_URL}/api/predictions`);
       const data = await res.json();
 
       const historyList = document.getElementById("historyList");
@@ -232,7 +212,10 @@
         <div class="watchlist-item">
           <div class="watchlist-left">
             <strong>${item.stock}</strong>
-            <small>${item.signal} - ${item.reason || ""}</small>
+            <small>
+              Price: $${Number(item.price || 0).toFixed(2)}<br>
+              ${item.signal} - ${item.reason || ""}
+            </small>
           </div>
           <span class="badge">${item.confidence}%</span>
         </div>
@@ -240,6 +223,7 @@
 
     } catch (error) {
       console.error(error);
+      document.getElementById("historyList").innerHTML = "Could not load prediction history.";
     }
   }
 
@@ -253,7 +237,7 @@
     }
 
     try {
-      const res = await fetch("https://signalist-backend-xix0.onrender.com/api/watchlist", {
+      const res = await fetch(`${BACKEND_URL}/api/watchlist`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ stock, signal })
@@ -277,7 +261,7 @@
 
   async function loadWatchlist() {
     try {
-      const res = await fetch("https://signalist-backend-xix0.onrender.com/api/watchlist");
+      const res = await fetch(`${BACKEND_URL}/api/watchlist`);
       const data = await res.json();
 
       const box = document.getElementById("watchlistBox");
@@ -299,17 +283,14 @@
 
     } catch (error) {
       console.error(error);
+      document.getElementById("watchlistBox").innerHTML = "Could not load watchlist.";
     }
   }
 
   async function removeWatchlist(id) {
     try {
-      await fetch(`https://signalist-backend-xix0.onrender.com/api/watchlist/${id}`, {
-        method: "DELETE"
-      });
-
+      await fetch(`${BACKEND_URL}/api/watchlist/${id}`, { method: "DELETE" });
       loadWatchlist();
-
     } catch (error) {
       console.error(error);
       alert("Could not remove item");
@@ -332,16 +313,10 @@
     }
 
     try {
-      const res = await fetch("https://signalist-backend-xix0.onrender.com/api/portfolio/buy", {
+      const res = await fetch(`${BACKEND_URL}/api/portfolio/buy`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          stock,
-          quantity,
-          price
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stock, quantity, price })
       });
 
       const data = await res.json();
@@ -363,7 +338,7 @@
 
   async function loadPortfolio() {
     try {
-      const res = await fetch("https://signalist-backend-xix0.onrender.com/api/portfolio");
+      const res = await fetch(`${BACKEND_URL}/api/portfolio`);
       const data = await res.json();
 
       const box = document.getElementById("portfolioBox");
@@ -378,13 +353,13 @@
           <div class="watchlist-left">
             <strong>${item.stock}</strong>
             <small>
-  Qty: ${item.quantity}<br>
-  Buy: $${Number(item.buyPrice).toFixed(2)}<br>
-  Current: $${Number(item.currentPrice).toFixed(2)}<br>
-  Invested: $${Number(item.investedValue).toFixed(2)}<br>
-  Value: $${Number(item.currentValue).toFixed(2)}<br>
-  P/L: $${Number(item.profitLoss).toFixed(2)}
-</small>
+              Qty: ${item.quantity}<br>
+              Buy: $${Number(item.buyPrice).toFixed(2)}<br>
+              Current: $${Number(item.currentPrice).toFixed(2)}<br>
+              Invested: $${Number(item.investedValue).toFixed(2)}<br>
+              Value: $${Number(item.currentValue).toFixed(2)}<br>
+              P/L: $${Number(item.profitLoss).toFixed(2)}
+            </small>
           </div>
           <button class="remove-btn" onclick="removePortfolio('${item._id}')">Remove</button>
         </div>
@@ -398,12 +373,8 @@
 
   async function removePortfolio(id) {
     try {
-      await fetch(`https://signalist-backend-xix0.onrender.com/api/portfolio/${id}`, {
-        method: "DELETE"
-      });
-
+      await fetch(`${BACKEND_URL}/api/portfolio/${id}`, { method: "DELETE" });
       loadPortfolio();
-
     } catch (error) {
       console.error(error);
       alert("Could not remove portfolio item");
