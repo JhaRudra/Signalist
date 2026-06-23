@@ -27,6 +27,7 @@
     .news-box { margin-top: 15px; padding: 15px; background: #f7faf9; border-radius: 10px; }
     .news-box ul { padding-left: 20px; margin-bottom: 0; }
     .news-box li { margin-bottom: 8px; }
+
     @media(max-width: 768px) {
       .grid { grid-template-columns: 1fr; }
       input { width: 100%; margin-bottom: 10px; }
@@ -99,14 +100,14 @@
 
     <div>
       <div class="card">
-        <h2>Your Watchlist</h2>
-        <div id="watchlistBox">Loading watchlist...</div>
+        <h2>User Profile</h2>
+        <p><span class="badge">Logged In</span></p>
+        <p id="welcomeUser">Welcome, User!</p>
       </div>
 
       <div class="card">
-        <h2>Account Status</h2>
-        <p><span class="badge">Logged In</span></p>
-        <p>Your JWT token is stored in browser localStorage.</p>
+        <h2>Your Watchlist</h2>
+        <div id="watchlistBox">Loading watchlist...</div>
       </div>
     </div>
   </div>
@@ -121,8 +122,15 @@
     window.location.href = "index.html";
   }
 
+  const userName = localStorage.getItem("signalistUser");
+
+  if (userName) {
+    document.getElementById("welcomeUser").textContent = `Welcome, ${userName}!`;
+  }
+
   function logout() {
     localStorage.removeItem("signalistToken");
+    localStorage.removeItem("signalistUser");
     window.location.href = "index.html";
   }
 

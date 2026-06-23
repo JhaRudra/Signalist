@@ -64,6 +64,10 @@ async function handleAuth(type) {
 
     if (data.token) {
       localStorage.setItem("signalistToken", data.token);
+
+      if (data.name) {
+        localStorage.setItem("signalistUser", data.name);
+      }
     }
 
     document.getElementById("formLogin").style.display = "none";

@@ -79,7 +79,8 @@ app.post("/api/auth/login", async (req, res) => {
 
         res.json({
             message: "Login Successful",
-            token
+            token,
+            name: user.name
         });
 
     } catch (error) {
@@ -93,11 +94,9 @@ app.post("/api/predict", async (req, res) => {
         const { stock } = req.body;
 
         const aiResponse = await axios.post(
-    "https://signalist-1.onrender.com/predict",
-    {
-        stock
-    }
-);
+            "https://signalist-1.onrender.com/predict",
+            { stock }
+        );
 
         const prediction = aiResponse.data;
 
@@ -225,11 +224,10 @@ app.get("/api/portfolio", async (req, res) => {
 
             try {
                 const aiResponse = await axios.post(
-    "https://signalist-1.onrender.com/predict",
-    {
-        stock: item.stock
-    }
-);
+                    "https://signalist-1.onrender.com/predict",
+                    { stock: item.stock }
+                );
+
                 currentPrice = Number(aiResponse.data.price);
             } catch (err) {
                 console.log("Could not fetch live price for", item.stock);
